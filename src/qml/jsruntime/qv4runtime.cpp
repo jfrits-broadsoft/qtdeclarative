@@ -436,6 +436,10 @@ Heap::Object *RuntimeHelpers::convertToObject(ExecutionEngine *engine, const Val
     case Value::Boolean_Type:
         return engine->newBooleanObject(value.booleanValue());
     case Value::Managed_Type:
+        if (!value.isString()) {
+            engine->throwTypeError();
+            return 0;
+        }
         Q_ASSERT(value.isString());
         return engine->newStringObject(value);
     case Value::Integer_Type:
