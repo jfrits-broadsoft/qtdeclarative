@@ -2470,7 +2470,7 @@ void QQuickItemViewPrivate::updateTrackedItem()
         item = highlight;
     trackedItem = item;
 
-    if (trackedItem)
+    if (trackedItem && (highlightComponent || autoHighlight))
         q->trackedPositionChanged();
 }
 
