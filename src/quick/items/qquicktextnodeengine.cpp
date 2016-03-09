@@ -817,7 +817,7 @@ void  QQuickTextNodeEngine::addToSceneGraph(QQuickTextNode *parentNode,
 
             // If the previous or next node completely overlaps this one, then we have already drawn the glyphs of
             // this node
-            bool drawCurrent = false;
+            bool drawCurrent = true;
             if (previousNode != 0 || nextNode != 0) {
                 for (int i = 0; i < node->ranges.size(); ++i) {
                     const QPair<int, int> &range = node->ranges.at(i);
