@@ -508,6 +508,7 @@ QQuickWindowPrivate::QQuickWindowPrivate()
     , renderTargetId(0)
     , vaoHelper(0)
     , incubationController(0)
+    , m_firstTimeHover(false)
 {
 #if QT_CONFIG(draganddrop)
     dragGrabber = new QQuickDragGrabber;
@@ -1741,6 +1742,14 @@ bool QQuickWindowPrivate::deliverHoverEvent(QQuickItem *item, const QPointF &sce
         if (item->contains(p)) {
             if (!hoverItems.isEmpty() && hoverItems.at(0) == item) {
                 //move
+                if (m_firstTimeHover) {
+                    // Sometimes popup windows have not received HoverLeave event when mouse has been moved
+                    // away from them, and when they are then hovered again they may not function correctly.
+                    // This hack is meant to fix that.
+                    sendHoverEvent(QEvent::HoverLeave, item, scenePos, lastScenePos, modifiers, timestamp, accepted);
+                    sendHoverEvent(QEvent::HoverEnter, item, scenePos, lastScenePos, modifiers, timestamp, accepted);
+                    m_firstTimeHover = false;
+                }
                 accepted = sendHoverEvent(QEvent::HoverMove, item, scenePos, lastScenePos, modifiers, timestamp, accepted);
             } else {
                 QList<QQuickItem *> itemsToHover;
@@ -4663,6 +4672,12 @@ QSGNinePatchNode *QQuickWindow::createNinePatchNode() const
 {
     Q_D(const QQuickWindow);
     return isSceneGraphInitialized() ? d->context->sceneGraphContext()->createNinePatchNode() : nullptr;
+}
+
+void QQuickWindow::setFirstTimeHover(bool hover)
+{
+    Q_D(QQuickWindow);
+    d->m_firstTimeHover = hover;
 }
 
 #ifndef QT_NO_DEBUG_STREAM
