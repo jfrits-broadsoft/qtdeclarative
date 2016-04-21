@@ -280,6 +280,8 @@ public:
 
     void runAndClearJobs(QList<QRunnable *> *jobs);
 
+    bool m_firstTimeHover;
+
 private:
     static void cleanupNodesOnShutdown(QQuickItem *);
 };
