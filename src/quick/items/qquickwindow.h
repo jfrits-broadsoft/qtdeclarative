@@ -145,6 +145,8 @@ public:
 
     qreal effectiveDevicePixelRatio() const;
 
+    void setFirstTimeHover(bool hover);
+
 Q_SIGNALS:
     void frameSwapped();
     Q_REVISION(2) void openglContextCreated(QOpenGLContext *context);
