@@ -63,7 +63,8 @@ QRect QAccessibleQuickItem::rect() const
     const QRect r = itemScreenRect(item());
 
     if (!r.isValid()) {
-        qWarning() << item()->metaObject()->className() << item()->property("accessibleText") << r;
+        //Commented out until https://bugreports.qt.io/browse/QTBUG-48593 is fixed.
+        //qWarning() << item()->metaObject()->className() << item()->property("accessibleText") << r;
     }
     return r;
 }
