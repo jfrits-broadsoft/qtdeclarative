@@ -205,12 +205,6 @@ QAccessible::State QAccessibleQuickItem::state() const
 
 QAccessible::Role QAccessibleQuickItem::role() const
 {
-    // Workaround for setAccessibleRole() not working for
-    // Text items. Text items are special since they are defined
-    // entirely from C++ (setting the role from QML works.)
-    if (qobject_cast<QQuickText*>(const_cast<QQuickItem *>(item())))
-        return QAccessible::StaticText;
-
     QAccessible::Role role = QAccessible::NoRole;
     if (item())
         role = QQuickItemPrivate::get(item())->accessibleRole();
