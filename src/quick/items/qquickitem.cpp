@@ -3201,6 +3201,7 @@ QQuickItemPrivate::QQuickItemPrivate()
     , implicitWidth(0)
     , implicitHeight(0)
     , baselineOffset(0)
+    , m_LastFocusReason(Qt::OtherFocusReason)
     , itemNodeInstance(0)
     , paintNode(0)
 {
@@ -3934,7 +3935,7 @@ void QQuickItem::inputMethodEvent(QInputMethodEvent *event)
     events for an item. The event information is provided by the
     \a event parameter.
   */
-void QQuickItem::focusInEvent(QFocusEvent * /*event*/)
+void QQuickItem::focusInEvent(QFocusEvent * event)
 {
 #if QT_CONFIG(accessibility)
     if (QAccessible::isActive()) {
@@ -3944,6 +3945,7 @@ void QQuickItem::focusInEvent(QFocusEvent * /*event*/)
         }
     }
 #endif
+   setLastFocusReason(event->reason());
 }
 
 /*!
@@ -5833,6 +5835,34 @@ void QQuickItem::setEnabled(bool e)
         scope = scope->parentItem();
 
     d->setEffectiveEnableRecur(scope, d->calcEffectiveEnable());
+}
+
+void QQuickItem::setLastFocusReason(Qt::FocusReason reason)
+{
+    if (!parentItem())
+        return;
+
+    QQuickItem *item = parentItem();
+    while (item && item->isFocusScope() && item->parentItem())
+        item = item->parentItem();
+
+    QQuickItemPrivate *itemPrivate = QQuickItemPrivate::get(item);
+    if (itemPrivate->m_LastFocusReason != reason) {
+        itemPrivate->m_LastFocusReason = reason;
+        emit lastFocusReasonChanged();
+    }
+}
+
+Qt::FocusReason QQuickItem::getLastFocusReason()
+{
+    if (!parentItem())
+        return Qt::OtherFocusReason;
+
+    QQuickItem *item = parentItem();
+    while (item && item->isFocusScope() && item->parentItem())
+        item = item->parentItem();
+
+    return QQuickItemPrivate::get(item)->m_LastFocusReason;
 }
 
 bool QQuickItemPrivate::calcEffectiveVisible() const
