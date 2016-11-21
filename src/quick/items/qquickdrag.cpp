@@ -71,6 +71,7 @@ public:
         , itemMoved(false)
         , eventQueued(false)
         , overrideActions(false)
+        , enableSlideBack(true)
         , dragType(QQuickDrag::Internal)
     {
     }
@@ -103,6 +104,7 @@ public:
     bool itemMoved : 1;
     bool eventQueued : 1;
     bool overrideActions : 1;
+    bool enableSlideBack : 1;
     QPointF hotSpot;
     QUrl imageSource;
     QQuickPixmap pixmapLoader;
@@ -579,6 +581,21 @@ void QQuickDragAttached::setDragType(QQuickDrag::DragType dragType)
     }
 }
 
+bool QQuickDragAttached::enableSlideBack() const
+{
+    Q_D(const QQuickDragAttached);
+    return d->enableSlideBack;
+}
+
+void QQuickDragAttached::setEnableSlideBack(bool enable)
+{
+    Q_D(QQuickDragAttached);
+    if (d->enableSlideBack != enable) {
+        d->enableSlideBack = enable;
+        emit enableSlideBackChanged();
+    }
+}
+
 void QQuickDragAttachedPrivate::start(Qt::DropActions supportedActions)
 {
     Q_Q(QQuickDragAttached);
@@ -764,6 +781,7 @@ Qt::DropAction QQuickDragAttachedPrivate::startDrag(Qt::DropActions supportedAct
     if (pixmapLoader.isReady()) {
         drag->setPixmap(QPixmap::fromImage(pixmapLoader.image()));
     }
+    drag->setEnableSlideBack(enableSlideBack);
 
     emit q->dragStarted();
 
