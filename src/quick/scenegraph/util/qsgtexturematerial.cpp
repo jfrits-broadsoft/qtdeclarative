@@ -76,7 +76,7 @@ void QSGOpaqueTextureMaterialShader::updateState(const RenderState &state, QSGMa
         qWarning() << "NULL texture in tx";
         return;
     }
-    if (!oldTx->texture()) {
+    if (oldTx && !oldTx->texture()) {
         qWarning() << "NULL texture in oldTx";
         return;
     }
