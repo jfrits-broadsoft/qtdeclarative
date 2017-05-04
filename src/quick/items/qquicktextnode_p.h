@@ -72,11 +72,12 @@ class QQuickTextNode : public QSGTransformNode
 {
 public:
     enum Decoration {
-        NoDecoration = 0x0,
-        Underline    = 0x1,
-        Overline     = 0x2,
-        StrikeOut    = 0x4,
-        Background   = 0x8
+        NoDecoration        = 0x0,
+        Underline           = 0x1,
+        Overline            = 0x2,
+        StrikeOut           = 0x4,
+        Background          = 0x8,
+        SpellCheckUnderline = 0x10
     };
     Q_DECLARE_FLAGS(Decorations, Decoration)
 

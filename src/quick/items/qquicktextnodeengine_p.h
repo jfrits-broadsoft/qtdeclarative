@@ -201,8 +201,8 @@ public:
         m_position = position;
     }
 
-
-
+    static QPixmap generateWavyPixmap(qreal maxRadius, const QPen &pen, int width);
+    static QPixmap generateDottedPixmap(int dotWidth, const QPen &pen, int width);
 
 private:
     struct TextDecoration
@@ -214,12 +214,14 @@ private:
             : selectionState(s)
             , rect(r)
             , color(c)
+            , spellCheckUnderline(false)
         {
         }
 
         SelectionState selectionState;
         QRectF rect;
         QColor color;
+        bool spellCheckUnderline : 1;
     };
 
     void processCurrentLine();
