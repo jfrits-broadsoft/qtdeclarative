@@ -478,10 +478,12 @@ ExecutionEngine::~ExecutionEngine()
     delete identifierTable;
     delete memoryManager;
 
-    QSet<QV4::CompiledData::CompilationUnit*> remainingUnits;
-    qSwap(compilationUnits, remainingUnits);
-    for (QV4::CompiledData::CompilationUnit *unit : qAsConst(remainingUnits))
+    while (!compilationUnits.isEmpty()) {
+        auto it = compilationUnits.begin();
+        QV4::CompiledData::CompilationUnit* unit = *it;
+        compilationUnits.erase(it);
         unit->unlink();
+    }
 
     internalClasses[Class_Empty]->destroy();
     delete classPool;
